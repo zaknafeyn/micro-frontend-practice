@@ -31,7 +31,8 @@ jobs:
           cache-name: cache-node-modules
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
+          # path: ~/.npm
+          path: ./node_modules
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/container/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -40,8 +41,9 @@ jobs:
       - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         name: List the state of node modules
         continue-on-error: true
-        run: npm list
-      - run: npm ci
+        run: npm ci
+        # run: npm list
+      # - run: npm ci
       - run: npm run build
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2.0
@@ -58,4 +60,3 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_CONTAINER }}
         timeout-minutes: 1
 
-        
