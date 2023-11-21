@@ -12,7 +12,9 @@ defaults:
   run:
     working-directory: packages/container
 
-    
+env:
+  PRODUCTION_DOMAIN: https://marketing-mfp.netlify.app
+
 jobs:
   build: 
     # runs-on: [self-hosted, ubuntu-latest]
