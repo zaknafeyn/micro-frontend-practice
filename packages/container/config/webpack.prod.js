@@ -1,6 +1,7 @@
 const { merge } = require('webpack-merge');
 const commonConfig = require('./webpack.common');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const packageJson = require('../package.json');
 
 const marketingDomain = process.env.MARKETING_PRODUCTION_DOMAIN;
@@ -13,6 +14,11 @@ const prodConfig = {
     filename: '[name].[contenthash].js'
   },
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'static' }
+      ]
+    }),
     new ModuleFederationPlugin({
       name: 'container',
       remotes: {
