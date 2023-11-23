@@ -1,28 +1,21 @@
-name: deploy-container
+name: deploy-auth
 
 on:
   push:
     branches: 
       - main
     paths:
-      - 'packages/container/**'
-      - '.github/workflows/container.yml'
+      - 'packages/auth/**'
+      - '.github/workflows/auth.yml'
 
 defaults:
   run:
-    working-directory: packages/container
-
-env:
-  # variables used to link container to the remote apps by their hosting domains
-  MARKETING_PRODUCTION_DOMAIN: https://marketing-mfp.netlify.app
-  AUTH_PRODUCTION_DOMAIN: https://auth-mfp.netlify.app
+    working-directory: packages/auth
 
 jobs:
   build: 
     # runs-on: [self-hosted, ubuntu-latest]
-    # runs-on: [self-hosted]
     runs-on: ubuntu-latest
-    # runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,10 +44,10 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2.0
         with:
-          publish-dir: 'packages/container/dist'
+          publish-dir: 'packages/auth/dist'
           production-branch: main
           deploy-message: "Deploy from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_CONTAINER }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_AUTH }}
         timeout-minutes: 1
