@@ -1,29 +1,21 @@
-name: deploy-container
+name: deploy-dashboard
 
 on:
   push:
     branches: 
       - main
     paths:
-      - 'packages/container/**'
-      - '.github/workflows/container.yml'
+      - 'packages/dashboard/**'
+      - '.github/workflows/dashboard.yml'
 
 defaults:
   run:
-    working-directory: packages/container
-
-env:
-  # variables used to link container to the remote apps by their hosting domains
-  MARKETING_PRODUCTION_DOMAIN: https://marketing-mfp.netlify.app
-  AUTH_PRODUCTION_DOMAIN: https://auth-mfp.netlify.app
-  DASHBOARD_PRODUCTION_DOMAIN: https://dashboard-mfp.netlify.app
+    working-directory: packages/dashboard
 
 jobs:
   build: 
     # runs-on: [self-hosted, ubuntu-latest]
-    # runs-on: [self-hosted]
     runs-on: ubuntu-latest
-    # runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,7 +31,7 @@ jobs:
           path: |
             node_modules
             **/node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/container/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/dashboard/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
@@ -52,10 +44,10 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2.0
         with:
-          publish-dir: 'packages/container/dist'
+          publish-dir: 'packages/dashboard/dist'
           production-branch: main
           deploy-message: "Deploy from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_CONTAINER }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_DASHBOARD }}
         timeout-minutes: 1
